@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply min-h-screen bg-rose-50 font-sans text-slate-900 antialiased;
+  background-image:
+    radial-gradient(circle at top left, rgba(248, 113, 113, 0.18), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(254, 202, 202, 0.8), transparent 35%),
+    linear-gradient(180deg, #fffdfd 0%, #fff7f7 100%);
+}
+
+#root {
+  @apply min-h-screen;
+}
+
+.pac-container {
+  z-index: 70;
+  margin-top: 0.5rem;
+  border: 1px solid rgb(254 205 211);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 24px 48px rgba(244, 63, 94, 0.16);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.pac-item {
+  padding: 0.85rem 1rem;
+  border-top: 1px solid rgb(255 228 230);
+  font-size: 0.875rem;
+  color: rgb(51 65 85);
+}
+
+.pac-item:first-child {
+  border-top: 0;
+}
+
+.pac-item:hover {
+  background: rgb(255 241 242);
+}
+
+.pac-item-query {
+  font-size: 0.95rem;
+  color: rgb(15 23 42);
+}
+
+@layer components {
+  .medical-card {
+    @apply rounded-3xl border border-rose-100 bg-white/90 shadow-lg shadow-rose-100/60 backdrop-blur-sm;
+  }
+
+  .medical-input {
+    @apply w-full rounded-2xl border border-rose-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-rose-400 focus:ring-4 focus:ring-rose-100;
+  }
+
+  .medical-button {
+    @apply inline-flex items-center justify-center rounded-2xl bg-medical-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-medical-700 focus:outline-none focus:ring-4 focus:ring-rose-200;
+  }
+
+  .medical-button-secondary {
+    @apply inline-flex items-center justify-center rounded-2xl border border-rose-200 bg-white px-5 py-3 text-sm font-semibold text-medical-700 transition hover:border-rose-300 hover:bg-rose-50 focus:outline-none focus:ring-4 focus:ring-rose-100;
+  }
+
+  .section-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+}
