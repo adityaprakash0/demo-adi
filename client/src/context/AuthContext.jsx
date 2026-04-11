@@ -1,8 +1,16 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getProfile, loginUser, signupUser } from '../api/auth.js';
+import { identify, resetIdentity } from '../utils/pulseiq.js';
 
 const AuthContext = createContext(null);
 const TOKEN_KEY = 'bloodFinderToken';
+
+const buildIdentityTraits = (user, donorProfile) => ({
+  email: user.email,
+  name: user.name,
+  role: user.role,
+  isDonor: Boolean(donorProfile),
+});
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -23,10 +31,12 @@ export const AuthProvider = ({ children }) => {
       const data = await getProfile();
       setUser(data.user);
       setDonorProfile(data.donorProfile);
+      void identify(data.user._id, buildIdentityTraits(data.user, data.donorProfile));
     } catch {
       localStorage.removeItem(TOKEN_KEY);
       setUser(null);
       setDonorProfile(null);
+      resetIdentity();
     } finally {
       setLoading(false);
     }
@@ -40,6 +50,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem(TOKEN_KEY, data.token);
     setUser(data.user);
     setDonorProfile(data.donorProfile || null);
+    void identify(data.user._id, buildIdentityTraits(data.user, data.donorProfile));
   };
 
   const login = async (payload) => {
@@ -58,6 +69,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem(TOKEN_KEY);
     setUser(null);
     setDonorProfile(null);
+    resetIdentity();
   };
 
   const refreshProfile = async () => {
@@ -92,4 +104,3 @@ export const useAuth = () => {
 
   return context;
 };
-

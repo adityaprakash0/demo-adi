@@ -2,6 +2,7 @@ import { validationResult } from 'express-validator';
 import Donor from '../models/Donor.js';
 import User from '../models/User.js';
 import generateToken from '../utils/generateToken.js';
+import { track } from '../utils/pulseiq.js';
 
 const buildAuthResponse = async (user) => {
   const donorProfile = await Donor.findOne({ user: user._id });
@@ -36,6 +37,8 @@ export const signup = async (req, res) => {
       phone,
     });
 
+    void track('user_registered', user._id.toString(), { email: user.email, role: user.role });
+
     return res.status(201).json(await buildAuthResponse(user));
   } catch (error) {
     return res.status(500).json({ message: 'Unable to create account', error: error.message });
@@ -58,6 +61,8 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
+    void track('user_logged_in', user._id.toString(), { email: user.email, role: user.role });
+
     return res.json(await buildAuthResponse(user));
   } catch (error) {
     return res.status(500).json({ message: 'Unable to login', error: error.message });
@@ -76,4 +81,3 @@ export const getCurrentUser = async (req, res) => {
     return res.status(500).json({ message: 'Unable to fetch profile', error: error.message });
   }
 };
-
